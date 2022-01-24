@@ -12,9 +12,13 @@ public class PokerGame {
     }
 
     public Hand compareHands() {
-        int score1 = hand1.getHighestCard();
-        int score2 = hand2.getHighestCard();
-        return score1 > score2 ? hand1 : hand2;
+        int compareValue = hand1.compareTo(hand2);
+        if (compareValue > 0) {
+            return hand1;
+        } else if (compareValue < 0) {
+            return hand2;
+        }
+        return null;
     }
 
 }
