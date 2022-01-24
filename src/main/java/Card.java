@@ -1,4 +1,4 @@
-public class Card implements Comparable<Card>{
+public class Card implements Comparable<Card> {
 
     private final CardValue value;
 
