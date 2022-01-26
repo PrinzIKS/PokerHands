@@ -1,8 +1,25 @@
 public class Card implements Comparable<Card> {
 
     private final CardValue value;
+    private final CardSuit suit;
 
     Card(String card) {
+        switch (card.charAt(1)){
+            case 'C':
+                this.suit = CardSuit.CLUBS;
+                break;
+            case 'H':
+                this.suit = CardSuit.HEARTS;
+                break;
+            case 'D':
+                this.suit = CardSuit.DIAMONDS;
+                break;
+            case 'S':
+                this.suit = CardSuit.SPADES;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + card.charAt(1));
+        }
         switch (card.charAt(0)) {
             case 'A':
                 this.value = CardValue.ACE;
@@ -51,6 +68,10 @@ public class Card implements Comparable<Card> {
     @Override
     public int compareTo(Card card) {
         return value.toInteger() - card.value.toInteger();
+    }
+
+    public boolean isSameSuit(Card card){
+        return this.suit == card.suit;
     }
 
 }

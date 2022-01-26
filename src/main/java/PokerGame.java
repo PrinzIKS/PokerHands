@@ -3,12 +3,9 @@ public class PokerGame {
     private Hand hand1;
     private Hand hand2;
 
-    public void setHand1(String hand) {
-        this.hand1 = new Hand(hand);
-    }
-
-    public void setHand2(String hand) {
-        this.hand2 = new Hand(hand);
+    public PokerGame(Hand hand1, Hand hand2) {
+        this.hand1 = hand1;
+        this.hand2 = hand2;
     }
 
     public Hand compareHands() {
