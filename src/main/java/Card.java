@@ -4,7 +4,7 @@ public class Card implements Comparable<Card> {
     private final CardSuit suit;
 
     Card(String card) {
-        switch (card.charAt(1)){
+        switch (card.charAt(1)) {
             case 'C':
                 this.suit = CardSuit.CLUBS;
                 break;
@@ -70,7 +70,7 @@ public class Card implements Comparable<Card> {
         return value.toInteger() - card.value.toInteger();
     }
 
-    public boolean isSameSuit(Card card){
+    public boolean isSameSuit(Card card) {
         return this.suit == card.suit;
     }
 

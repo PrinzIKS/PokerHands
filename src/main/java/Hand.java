@@ -46,7 +46,7 @@ public class Hand implements Comparable<Hand> {
     private boolean isStraight() {
         boolean isStraight = true;
         for (int i = 0; i < cards.size() - 1; i++) {
-            isStraight = isStraight && cards.get(i).compareTo(cards.get(i+1)) == 1;
+            isStraight = isStraight && cards.get(i).compareTo(cards.get(i + 1)) == 1;
         }
         return isStraight;
     }

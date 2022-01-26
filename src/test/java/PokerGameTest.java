@@ -95,7 +95,7 @@ public class PokerGameTest {
 
     @Test
     public void straightWinsByHighCard() {
-        Hand winningHand  = new Hand("3D 4S 7D 5D 6D");
+        Hand winningHand = new Hand("3D 4S 7D 5D 6D");
         Hand losingHand = new Hand("2H 3H 6S 5H 4H");
 
         PokerGame poker = new PokerGame(losingHand, winningHand);
@@ -106,7 +106,7 @@ public class PokerGameTest {
 
     @Test
     public void straightDraw() {
-        Hand winningHand  = new Hand("3D 4S 7D 5D 6D");
+        Hand winningHand = new Hand("3D 4S 7D 5D 6D");
         Hand losingHand = new Hand("3H 4H 5S 7H 6H");
 
         PokerGame poker = new PokerGame(losingHand, winningHand);
@@ -117,7 +117,7 @@ public class PokerGameTest {
 
     @Test
     public void flushWinsVsStraight() {
-        Hand winningHand  = new Hand("3D 4D 7D 5D 6D");
+        Hand winningHand = new Hand("3D 4D 7D 5D 6D");
         Hand losingHand = new Hand("8H 4H 5S 7H 6H");
 
         PokerGame poker = new PokerGame(losingHand, winningHand);
