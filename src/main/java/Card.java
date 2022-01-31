@@ -74,4 +74,7 @@ public class Card implements Comparable<Card> {
         return this.suit == card.suit;
     }
 
+    public CardValue getValue() {
+        return value;
+    }
 }

@@ -5,8 +5,7 @@ import java.util.List;
 public class Hand implements Comparable<Hand> {
 
     private final List<Card> cards = new ArrayList<>();
-    private final boolean isFlush;
-    private final boolean isStraight;
+    private final Rank rank;
 
     public Hand(String hand) {
         for (String value : hand.split(" ")) {
@@ -14,25 +13,21 @@ public class Hand implements Comparable<Hand> {
         }
         Collections.sort(cards);
         Collections.reverse(cards);
-        this.isFlush = this.isFlush();
-        this.isStraight = this.isStraight();
+        this.rank = this.calculateRank();
     }
 
     @Override
     public int compareTo(Hand hand) {
-        if (this.isFlush && !hand.isFlush) {
+        if (this.rank.toInteger() > hand.rank.toInteger())
             return 1;
-        }
-        if (!this.isFlush && hand.isFlush) {
+        if (this.rank.toInteger() < hand.rank.toInteger())
             return -1;
-        }
-        if (this.isStraight && !hand.isStraight) {
-            return 1;
-        }
-        if (!this.isStraight && hand.isStraight) {
-            return -1;
-        }
         return compareCardValues(cards, hand.cards);
+    }
+
+    private boolean isFullHouse() {
+        return cards.get(0).getValue() == cards.get(2).getValue() && cards.get(3).getValue() == cards.get(4).getValue()
+                || cards.get(0).getValue() == cards.get(1).getValue() && cards.get(2).getValue() == cards.get(4).getValue();
     }
 
     private boolean isFlush() {
@@ -46,9 +41,13 @@ public class Hand implements Comparable<Hand> {
     private boolean isStraight() {
         boolean isStraight = true;
         for (int i = 0; i < cards.size() - 1; i++) {
-            isStraight = isStraight && cards.get(i).compareTo(cards.get(i + 1)) == 1;
+            isStraight = isStraight && cards.get(i).getValue().toInteger() == cards.get(i + 1).getValue().toInteger() + 1;
         }
         return isStraight;
+    }
+
+    private boolean isFourOfAKind() {
+        return cards.get(0).getValue() == cards.get(3).getValue() || cards.get(1).getValue() == cards.get(4).getValue();
     }
 
     private int compareCardValues(List<Card> hand1, List<Card> hand2) {
@@ -58,6 +57,36 @@ public class Hand implements Comparable<Hand> {
                 return compareValue;
         }
         return 0;
+    }
+
+    private Rank calculateRank() {
+        boolean isStraight = this.isStraight();
+        boolean isFlush = this.isFlush();
+        if (isStraight && isFlush && cards.get(0).getValue() == CardValue.ACE) return Rank.ROYAL_FLUSH;
+        if (isStraight && isFlush) return Rank.STRAIGHT_FLUSH;
+        if (this.isFourOfAKind()) {
+            this.sortFourOfAKind();
+            return Rank.FOUR_OF_A_KIND;
+        }
+        if (this.isFullHouse()) {
+            this.sortFullHouse();
+            return Rank.FULL_HOUSE;
+        }
+        if (isFlush) return Rank.FLUSH;
+        if (isStraight) return Rank.STRAIGHT;
+        return Rank.HIGH_CARD;
+    }
+
+    private void sortFullHouse() {
+        if (cards.get(0).getValue() != cards.get(2).getValue()) {
+            Collections.reverse(cards);
+        }
+    }
+
+    private void sortFourOfAKind() {
+        if (cards.get(0).getValue() != cards.get(1).getValue()) {
+            Collections.reverse(cards);
+        }
     }
 
 }
