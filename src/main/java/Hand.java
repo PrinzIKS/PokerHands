@@ -50,6 +50,23 @@ public class Hand implements Comparable<Hand> {
         return cards.get(0).getValue() == cards.get(3).getValue() || cards.get(1).getValue() == cards.get(4).getValue();
     }
 
+    private boolean isThreeOfAKind() {
+        return cards.get(0).getValue() == cards.get(2).getValue()
+                || cards.get(1).getValue() == cards.get(3).getValue()
+                || cards.get(2).getValue() == cards.get(4).getValue();
+    }
+
+    private int countPairs() {
+        int pairs = 0;
+        for (int i = 0; i < cards.size() - 1; i++) {
+            if (cards.get(i).getValue() == cards.get(i + 1).getValue()) {
+                pairs++;
+                i++;
+            }
+        }
+        return pairs;
+    }
+
     private int compareCardValues(List<Card> hand1, List<Card> hand2) {
         for (int i = 0; i < hand1.size(); i++) {
             int compareValue = hand1.get(i).compareTo(hand2.get(i));
@@ -62,30 +79,52 @@ public class Hand implements Comparable<Hand> {
     private Rank calculateRank() {
         boolean isStraight = this.isStraight();
         boolean isFlush = this.isFlush();
-        if (isStraight && isFlush && cards.get(0).getValue() == CardValue.ACE) return Rank.ROYAL_FLUSH;
-        if (isStraight && isFlush) return Rank.STRAIGHT_FLUSH;
-        if (this.isFourOfAKind()) {
-            this.sortFourOfAKind();
-            return Rank.FOUR_OF_A_KIND;
+        Rank rank = Rank.HIGH_CARD;
+        if (isStraight && isFlush && cards.get(0).getValue() == CardValue.ACE) {
+            rank = Rank.ROYAL_FLUSH;
+        } else if (isStraight && isFlush) {
+            rank = Rank.STRAIGHT_FLUSH;
+        } else if (this.isFourOfAKind()) {
+            this.swapThirdCardWithFirst();
+            rank = Rank.FOUR_OF_A_KIND;
+        } else if (this.isFullHouse()) {
+            this.swapThirdCardWithFirst();
+            rank = Rank.FULL_HOUSE;
+        } else if (isFlush) {
+            rank = Rank.FLUSH;
+        } else if (isStraight) {
+            rank = Rank.STRAIGHT;
+        } else if (this.isThreeOfAKind()) {
+            this.swapThirdCardWithFirst();
+            rank = Rank.THREE_OF_A_KIND;
+        } else if (this.countPairs() == 2) {
+            this.movePairsToFront();
+            rank = Rank.TWO_PAIRS;
+        } else if (this.countPairs() == 1) {
+            this.movePairsToFront();
+            rank = Rank.PAIR;
         }
-        if (this.isFullHouse()) {
-            this.sortFullHouse();
-            return Rank.FULL_HOUSE;
-        }
-        if (isFlush) return Rank.FLUSH;
-        if (isStraight) return Rank.STRAIGHT;
-        return Rank.HIGH_CARD;
+        return rank;
     }
 
-    private void sortFullHouse() {
+    //todo method name
+    private void swapThirdCardWithFirst() {
         if (cards.get(0).getValue() != cards.get(2).getValue()) {
-            Collections.reverse(cards);
+            Collections.swap(cards, 0, 2);
         }
     }
 
-    private void sortFourOfAKind() {
-        if (cards.get(0).getValue() != cards.get(1).getValue()) {
-            Collections.reverse(cards);
+    private void movePairsToFront() {
+        int endIndex = 0;
+        for (int i = cards.size() - 1; i > endIndex; i--) {
+            if (cards.get(i).getValue() == cards.get(i - 1).getValue()) {
+                cards.add(0, cards.get(i));
+                cards.remove(i + 1);
+                cards.add(0, cards.get(i));
+                cards.remove(i + 1);
+                endIndex = endIndex + 2;
+                i = cards.size();
+            }
         }
     }
 
